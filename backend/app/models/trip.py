@@ -1,29 +1,35 @@
-from sqlalchemy import Column, String, Float, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float
 from sqlalchemy.orm import relationship
-import uuid
+from datetime import datetime, timezone
+from app.db.database import Base
 
-from app.models.base import Base, TimestampMixin
-
-class Trip(Base, TimestampMixin):
+class Trip(Base):
     __tablename__ = "trips"
 
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    route_id = Column(String, ForeignKey("routes.id"))
-    status = Column(String, default="planned") # planned, active, completed, cancelled
-    start_time = Column(DateTime(timezone=True), nullable=True)
-    end_time = Column(DateTime(timezone=True), nullable=True)
-    actual_duration_minutes = Column(Float, nullable=True)
-    
-    events = relationship("TripEvent", back_populates="trip")
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    origin_lat = Column(Float, nullable=False)
+    origin_lng = Column(Float, nullable=False)
+    dest_lat = Column(Float, nullable=False)
+    dest_lng = Column(Float, nullable=False)
+    status = Column(String, default="PLANNED") # PLANNED, ACTIVE, COMPLETED, CANCELLED
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
-class TripEvent(Base, TimestampMixin):
-    __tablename__ = "trip_events"
+    user = relationship("User", back_populates="trips")
+    route_options = relationship("RouteOption", back_populates="trip")
+    alerts = relationship("Alert", back_populates="trip")
+    decisions = relationship("UserDecision", back_populates="trip")
 
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    trip_id = Column(String, ForeignKey("trips.id"), nullable=False)
-    event_type = Column(String) # reroute, delay, incident_encountered
-    description = Column(String)
-    latitude = Column(Float, nullable=True)
-    longitude = Column(Float, nullable=True)
+class RouteOption(Base):
+    __tablename__ = "route_options"
 
-    trip = relationship("Trip", back_populates="events")
+    id = Column(Integer, primary_key=True, index=True)
+    trip_id = Column(Integer, ForeignKey("trips.id"), nullable=False)
+    provider_route_id = Column(String)
+    distance_meters = Column(Integer)
+    current_eta_seconds = Column(Integer)
+    geometry = Column(String) # GeoJSON or encoded polyline
+    is_selected = Column(Integer, default=0) # 1 if selected by user
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    trip = relationship("Trip", back_populates="route_options")

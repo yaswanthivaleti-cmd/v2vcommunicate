@@ -18,12 +18,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from app.routers import journey, emergency
+from app.routers import journey, emergency, auth, traffic, weather
 
-# app.include_router(traffic.router, prefix=f"{settings.API_V1_STR}/traffic", tags=["Traffic"])
-# app.include_router(weather.router, prefix=f"{settings.API_V1_STR}/weather", tags=["Weather"])
-# app.include_router(incident.router, prefix=f"{settings.API_V1_STR}/incidents", tags=["Incidents"])
-# app.include_router(route.router, prefix=f"{settings.API_V1_STR}/routes", tags=["Routes"])
+# The auth router should be registered.
+app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["Authentication"])
+app.include_router(traffic.router, prefix=f"{settings.API_V1_STR}/traffic", tags=["Traffic"])
+app.include_router(weather.router, prefix=f"{settings.API_V1_STR}/weather", tags=["Weather"])
 app.include_router(journey.router, prefix=f"{settings.API_V1_STR}/journey", tags=["Journey"])
 app.include_router(emergency.router, prefix=f"{settings.API_V1_STR}/emergency", tags=["Emergency"])
 # app.include_router(dashboard.router, prefix=f"{settings.API_V1_STR}/dashboard", tags=["Dashboard"])
@@ -42,4 +42,5 @@ def root():
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy", "version": settings.VERSION}
+    return {"status": "ok"}
+

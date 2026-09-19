@@ -1,69 +1,39 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from typing import List, Any
+from app.db.database import get_db
+from app.api.deps import get_current_user
+from app.models.user import User
+from app.models.observation import TrafficObservation
 from app.integrations.factory import ProviderFactory
 from app.integrations.normalization.traffic_normalizer import TrafficNormalizer
-from app.integrations.providers import traffic_provider
-from app.models.traffic import Corridor, RoadSegment, TrafficSnapshot
-from pydantic import BaseModel
 
 router = APIRouter()
 
-class TrafficSnapshotSchema(BaseModel):
-    id: str
-    current_speed: float
-    free_flow_speed: float
-    congestion_level: str
-    data_status: str
-    quality: str
+@router.get("/current")
+async def get_current_traffic(
+    latitude: float = Query(..., description="Latitude"),
+    longitude: float = Query(..., description="Longitude"),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    provider = ProviderFactory.get_traffic_provider()
+    raw_traffic = await provider.get_current_traffic(latitude, longitude)
     
-    class Config:
-        from_attributes = True
-
-class SegmentSchema(BaseModel):
-    id: str
-    name: str
-    start_lat: float
-    start_lng: float
-    end_lat: float
-    end_lng: float
-    length_meters: float
-    traffic: TrafficSnapshotSchema = None
-
-    class Config:
-        from_attributes = True
-
-class CorridorSchema(BaseModel):
-    id: str
-    name: str
-    description: str
-    segments: List[SegmentSchema] = []
-
-    class Config:
-        from_attributes = True
-
-@router.get("/corridors", response_model=List[CorridorSchema])
-def get_corridors(db: Session = Depends(get_db)):
-    corridors = db.query(Corridor).all()
-    result = []
-    for c in corridors:
-        segments = []
-        for s in c.segments:
-            # Fetch latest traffic snapshot via provider
-            traffic = traffic_provider.get_traffic_data(db, s.id)
-            seg_data = SegmentSchema.model_validate(s).model_dump()
-            if traffic:
-                seg_data["traffic"] = TrafficSnapshotSchema.model_validate(traffic).model_dump()
-            segments.append(seg_data)
+    if not raw_traffic:
+        raise HTTPException(status_code=404, detail="Traffic data unavailable for this location.")
         
-        c_data = CorridorSchema.model_validate(c).model_dump()
-        c_data["segments"] = segments
-        result.append(c_data)
-    return result
-
-@router.get("/segments/{segment_id}/traffic", response_model=TrafficSnapshotSchema)
-def get_segment_traffic(segment_id: str, db: Session = Depends(get_db)):
-    traffic = traffic_provider.get_traffic_data(db, segment_id)
-    if not traffic:
-        raise HTTPException(status_code=404, detail="Traffic data not found")
+    traffic = TrafficNormalizer.normalize(raw_traffic, provider.name, is_live=True)
+    
+    # Store observation in DB
+    observation = TrafficObservation(
+        latitude=latitude,
+        longitude=longitude,
+        current_speed=traffic["current_speed"],
+        free_flow_speed=traffic["free_flow_speed"],
+        congestion_ratio=traffic["current_speed"] / max(traffic["free_flow_speed"], 1),
+        provider=provider.name
+    )
+    db.add(observation)
+    db.commit()
+    
     return traffic

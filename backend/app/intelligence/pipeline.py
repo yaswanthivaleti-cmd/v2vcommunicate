@@ -20,7 +20,7 @@ class TrafficAIPipeline:
     """Orchestrates the entire data -> intelligence -> decision pipeline."""
     
     @staticmethod
-    async def analyze_journey(origin: Any, destination: Any) -> Dict[str, Any]:
+    async def analyze_journey(origin: Any, destination: Any, user_preference: str = "FASTEST") -> Dict[str, Any]:
         # 1. Initialize Providers
         traffic_provider = ProviderFactory.get_traffic_provider()
         weather_provider = ProviderFactory.get_weather_provider()
@@ -92,7 +92,7 @@ class TrafficAIPipeline:
         analyzed_routes = RouteDecisionEngine.compare(analyzed_routes)
         
         # 7. Recommendation
-        recommendation = RecommendationEngine.generate(analyzed_routes, primary_route_index=0)
+        recommendation = RecommendationEngine.generate(analyzed_routes, user_preference=user_preference)
         
         # 8. Compile Response
         # Following the strict JSON structure requested
