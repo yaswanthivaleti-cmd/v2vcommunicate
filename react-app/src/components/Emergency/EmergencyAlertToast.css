@@ -37,6 +37,17 @@
   line-height: 1.4;
 }
 
+.et-custom-text {
+  font-size: 13px;
+  color: #0f172a;
+  background: #f1f5f9;
+  padding: 6px 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-style: italic;
+  border-left: 2px solid #cbd5e1;
+}
+
 .et-distance {
   font-size: 13px;
   color: #64748b;

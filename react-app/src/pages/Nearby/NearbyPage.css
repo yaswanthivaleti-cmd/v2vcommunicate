@@ -1,0 +1,168 @@
+.nearby-page {
+  padding: 24px;
+  height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.nearby-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.nearby-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: #0f172a;
+}
+
+.nearby-header p {
+  margin: 0;
+  color: #64748b;
+  flex: 1;
+}
+
+.broadcast-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+  transition: all 0.2s;
+}
+
+.broadcast-btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.nearby-content {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+}
+
+.nearby-list {
+  width: 300px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.nearby-list h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 12px;
+}
+
+.vehicle-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.vehicle-list-item:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.vehicle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vehicle-id {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 0.9rem;
+}
+
+.vehicle-dist {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.ping-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.ping-btn:hover {
+  background: #2563eb;
+}
+
+.no-vehicles {
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 32px;
+}
+
+.nearby-map-container {
+  flex: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.map-popup p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+}
+
+.map-popup button {
+  margin-top: 8px;
+  width: 100%;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.map-popup button:hover {
+  background: #2563eb;
+}
+
+.emoji-marker {
+  background: none;
+  border: none;
+}
+
+@media (max-width: 768px) {
+  .nearby-content {
+    flex-direction: column;
+  }
+  .nearby-list {
+    width: 100%;
+    max-height: 250px;
+  }
+}

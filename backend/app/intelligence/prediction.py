@@ -21,10 +21,13 @@ class RuleBasedPredictionEngine:
         
         # Trend adjustments
         trend_factor = 1.0
+        trend_direction = "Stable"
         if trend == "increasing":
             trend_factor = 0.9  # speed will decrease over time
+            trend_direction = "Worsening"
         elif trend == "improving":
             trend_factor = 1.1  # speed will increase
+            trend_direction = "Improving"
             
         base_future_speed = current_speed * event_factor
         
@@ -38,6 +41,9 @@ class RuleBasedPredictionEngine:
             
         return {
             "status": "Deterministic rule-based short-term traffic prediction.",
+            "future_speed": round(base_future_speed * trend_factor, 1),
+            "confidence": 0.85,
+            "trend_direction": trend_direction,
             "5_min": {
                 "predicted_speed": round(base_future_speed * (trend_factor ** 0.5), 1),
                 "predicted_congestion": "Heavy" if congestion_score > 5 else "Moderate",

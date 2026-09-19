@@ -26,6 +26,9 @@ class VehicleEmergencyEvent(BaseModel):
     severity: str
     timestamp: str
     status: str = "active"
+    target_uuid: Optional[str] = None
+    broadcast: Optional[bool] = False
+    custom_text: Optional[str] = None
 
 # --- Alert ---
 class EmergencyAlert(BaseModel):
@@ -36,6 +39,8 @@ class EmergencyAlert(BaseModel):
     severity: str = "high"
     message: str = "A connected vehicle has stopped ahead."
     action: str = "open_chat"
+    target_vehicle_uuid: Optional[str] = None
+    custom_text: Optional[str] = None
 
 # --- Chat Models ---
 class EmergencyChatParticipant(BaseModel):

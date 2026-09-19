@@ -10,7 +10,8 @@ import {
   Settings, 
   HelpCircle,
   LogOut,
-  ShieldAlert
+  ShieldAlert,
+  Users
 } from 'lucide-react';
 import { logoutUser } from '../../api/authApi';
 
@@ -21,6 +22,7 @@ const Sidebar = ({ activePage, setActivePage, setIsAuthenticated }) => {
     { name: 'Route Planning', icon: MapPin },
     { name: 'Predictions', icon: TrendingUp },
     { name: 'Incidents', icon: AlertTriangle, badge: '7' },
+    { name: 'Nearby', icon: Users, dot: true },
     { name: 'Analytics', icon: BarChart2 },
   ];
 

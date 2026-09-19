@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { loginUser, registerUser } from '../../api/authApi';
+import { loginUser, registerUser, getMe } from '../../api/authApi';
 import './AuthPage.css';
 
 const AuthPage = ({ onAuthSuccess }) => {
@@ -21,7 +21,8 @@ const AuthPage = ({ onAuthSuccess }) => {
         await registerUser(email, password);
         await loginUser(email, password); // auto-login after register
       }
-      onAuthSuccess();
+      const userData = await getMe();
+      onAuthSuccess(userData);
     } catch (err) {
       setError(err.message || "Authentication failed");
     } finally {

@@ -6,6 +6,7 @@ import LiveTrafficPage from './pages/LiveTraffic/LiveTrafficPage';
 import RoutePlanningPage from './pages/RoutePlanning/RoutePlanningPage';
 import PredictionsPage from './pages/Predictions/PredictionsPage';
 import IncidentsPage from './pages/Incidents/IncidentsPage';
+import NearbyPage from './pages/Nearby/NearbyPage';
 import AnalyticsPage from './pages/Analytics/AnalyticsPage';
 import SettingsPage from './pages/Settings/SettingsPage';
 import HelpPage from './pages/Help/HelpPage';
@@ -34,17 +35,18 @@ function App() {
   const [showChatModal, setShowChatModal] = useState(false);
 
   // Initialize UUID and Auth State
+  // We will now rely on the authenticated user ID for the vehicleUuid, 
+  // so we can initialize it to null here and set it after login/getMe.
   useEffect(() => {
-    let storedUuid = localStorage.getItem('trafficai_vehicle_uuid');
-    if (!storedUuid) {
-      storedUuid = generateUUID();
-      localStorage.setItem('trafficai_vehicle_uuid', storedUuid);
-    }
-    setVehicleUuid(storedUuid);
-
+    // Check if token exists
     const token = localStorage.getItem('token');
+
     if (token) {
-      getMe().then(() => setIsAuthenticated(true)).catch(() => {
+      getMe().then((userData) => {
+        setIsAuthenticated(true);
+        // Bind the chat system's vehicleUuid to the actual user account!
+        setVehicleUuid(`user-${userData.id}`);
+      }).catch(() => {
         localStorage.removeItem('token');
         setIsAuthenticated(false);
       });
@@ -103,7 +105,12 @@ function App() {
   };
 
   if (!isAuthenticated) {
-    return <AuthPage onAuthSuccess={() => setIsAuthenticated(true)} />;
+    return <AuthPage onAuthSuccess={(userData) => {
+      setIsAuthenticated(true);
+      if (userData && userData.id) {
+         setVehicleUuid(`user-${userData.id}`);
+      }
+    }} />;
   }
 
   return (
@@ -117,6 +124,7 @@ function App() {
           {activePage === 'Route Planning' && <RoutePlanningPage setActivePage={setActivePage} />}
           {activePage === 'Predictions' && <PredictionsPage setActivePage={setActivePage} />}
           {activePage === 'Incidents' && <IncidentsPage setActivePage={setActivePage} />}
+          {activePage === 'Nearby' && <NearbyPage setActivePage={setActivePage} vehicleUuid={vehicleUuid} />}
           {activePage === 'Analytics' && <AnalyticsPage setActivePage={setActivePage} />}
           {activePage === 'Settings' && <SettingsPage setActivePage={setActivePage} />}
           {activePage === 'Help' && <HelpPage setActivePage={setActivePage} />}

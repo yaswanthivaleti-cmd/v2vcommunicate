@@ -2,9 +2,9 @@ import React from 'react';
 import './RouteComparisonCard.css';
 import { CheckCircle2, Clock, Navigation2, Activity, AlertCircle, CreditCard } from 'lucide-react';
 
-const RouteComparisonCard = ({ routeName, badge, badgeType, isSelected, eta, distance, traffic, delay, toll }) => {
+const RouteComparisonCard = ({ routeName, badge, badgeType, isSelected, eta, distance, traffic, delay, toll, onClick }) => {
   return (
-    <div className={`route-comp-card ${isSelected ? 'selected' : ''}`}>
+    <div className={`route-comp-card ${isSelected ? 'selected' : ''}`} onClick={onClick} style={{ cursor: 'pointer' }}>
       <div className="card-header">
         <div className="card-title-group">
           <span className="route-name">{routeName}</span>
@@ -36,7 +36,7 @@ const RouteComparisonCard = ({ routeName, badge, badgeType, isSelected, eta, dis
         </div>
       </div>
 
-      <button className={`select-route-btn ${isSelected ? 'active' : ''}`}>
+      <button className={`select-route-btn ${isSelected ? 'active' : ''}`} onClick={(e) => { e.stopPropagation(); onClick && onClick(); }}>
         {isSelected ? 'Current Selection' : 'Select Route'}
       </button>
     </div>

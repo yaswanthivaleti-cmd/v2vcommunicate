@@ -14,13 +14,19 @@ class RoutingNormalizer:
             for idx, route in enumerate(raw_data["routes"]):
                 summary = route.get("summary", {})
                 
+                geometry = []
+                for leg in route.get("legs", []):
+                    for point in leg.get("points", []):
+                        if "latitude" in point and "longitude" in point:
+                            geometry.append([point["latitude"], point["longitude"]])
+                
                 normalized.append({
                     "route_id": f"tomtom_route_{idx}",
                     "distance_km": summary.get("lengthInMeters", 0) / 1000.0,
                     "distance_meters": summary.get("lengthInMeters", 0),
                     "base_eta_minutes": summary.get("travelTimeInSeconds", 0) / 60.0,
                     "current_eta_seconds": summary.get("travelTimeInSeconds", 0),
-                    "geometry": "", # Geometry could be parsed from legs/points if needed
+                    "geometry": geometry,
                     "segments": [],
                     "toll": summary.get("noToll", False) == False,
                     "source": provider_name,

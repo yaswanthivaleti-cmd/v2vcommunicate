@@ -13,6 +13,9 @@ const EmergencyAlertToast = ({ alertData, onOpenChat, onDismiss }) => {
       <div className="et-content-col">
         <div className="et-title">🚨 {alertData.type.replace(/_/g, ' ').toUpperCase()}</div>
         <div className="et-message">{alertData.message}</div>
+        {alertData.custom_text && (
+          <div className="et-custom-text">"{alertData.custom_text}"</div>
+        )}
         <div className="et-distance">Distance: ~{alertData.distance_meters} m</div>
         
         <div className="et-actions">

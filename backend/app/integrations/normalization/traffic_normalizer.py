@@ -32,6 +32,13 @@ class TrafficNormalizer:
         elif provider_name == "ExternalTrafficProvider":
             # Real parsing logic for TomTom Flow Segment Data
             flow_data = raw_data.get("flowSegmentData", {})
+            
+            coordinates = []
+            if "coordinates" in flow_data and "coordinate" in flow_data["coordinates"]:
+                for pt in flow_data["coordinates"]["coordinate"]:
+                    if "latitude" in pt and "longitude" in pt:
+                        coordinates.append([pt["latitude"], pt["longitude"]])
+                        
             return {
                 "road_segment_id": "unknown", # Coordinate-based request doesn't return segment ID
                 "road_name": "Unknown Road", # TomTom flow segment often omits road name without Reverse Geocoding
@@ -42,6 +49,7 @@ class TrafficNormalizer:
                 "timestamp": datetime.utcnow().isoformat(),
                 "road_closure": flow_data.get("roadClosure", False),
                 "confidence": flow_data.get("confidence", 1.0),
+                "coordinates": coordinates,
                 "source": "TomTom",
                 "data_status": "live" if is_live else "cached",
                 "quality": "good" if flow_data.get("currentSpeed") is not None else "degraded"

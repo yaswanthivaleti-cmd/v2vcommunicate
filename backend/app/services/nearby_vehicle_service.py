@@ -76,4 +76,22 @@ class NearbyVehicleService:
             
         return relevant_vehicles
 
+    def find_nearby_vehicles(self, lat: float, lon: float, originator_uuid: str, radius_m: float = 500.0) -> List[Dict]:
+        """Simple radius search without heading/direction constraints."""
+        nearby_vehicles = []
+        all_presence = emergency_db.get_all_presence()
+        
+        for p in all_presence:
+            v_uuid = p["vehicle_uuid"]
+            if v_uuid == originator_uuid:
+                continue
+                
+            dist = haversine_distance(lat, lon, p["latitude"], p["longitude"])
+            if dist <= radius_m:
+                p_copy = dict(p)
+                p_copy["distance_meters"] = round(dist)
+                nearby_vehicles.append(p_copy)
+                
+        return nearby_vehicles
+
 nearby_vehicle_service = NearbyVehicleService()

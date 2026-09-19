@@ -32,31 +32,77 @@ def trigger_event(event: VehicleEmergencyEvent):
     event_dict = event.dict()
     event_id = emergency_db.create_event(event_dict)
     
-    # Find nearby relevant vehicles
-    relevant_vehicles = nearby_vehicle_service.find_relevant_vehicles(
-        event_lat=event.latitude,
-        event_lon=event.longitude,
-        event_heading=event.heading,
-        originator_uuid=event.vehicle_uuid
-    )
-    
     generated_alerts = []
     
-    for v in relevant_vehicles:
+    if event.target_uuid:
+        # Targeted ping directly to one vehicle
         alert = EmergencyAlert(
             event_id=event_id,
-            distance_meters=v["distance_meters"]
+            distance_meters=0, # not relevant for targeted ping
+            message=f"Targeted Alert: {event.type}",
+            target_vehicle_uuid=event.target_uuid,
+            custom_text=event.custom_text
         )
         alert_dict = alert.dict()
-        alert_dict["target_vehicle_uuid"] = v["vehicle_uuid"]
         alert_id = emergency_db.create_alert(alert_dict)
         generated_alerts.append(alert_dict)
+        return {
+            "event_id": event_id,
+            "notified_vehicles": 1,
+            "alerts": generated_alerts
+        }
+        
+    elif getattr(event, "broadcast", False):
+        # Universal broadcast to ALL nearby vehicles within 500m
+        nearby_vehicles = nearby_vehicle_service.find_nearby_vehicles(
+            event.latitude, event.longitude, event.vehicle_uuid, radius_m=500.0
+        )
+        for v in nearby_vehicles:
+            alert = EmergencyAlert(
+                event_id=event_id,
+                distance_meters=v["distance_meters"],
+                message=f"Broadcast: {event.type}",
+                target_vehicle_uuid=v["vehicle_uuid"],
+                custom_text=getattr(event, "custom_text", None)
+            )
+            alert_dict = alert.dict()
+            alert_id = emergency_db.create_alert(alert_dict)
+            generated_alerts.append(alert_dict)
+            
+        return {
+            "event_id": event_id,
+            "notified_vehicles": len(nearby_vehicles),
+            "alerts": generated_alerts
+        }
+        
+    else:
+        # Standard intelligent routing ping (checks heading, distance, direction)
+        relevant_vehicles = nearby_vehicle_service.find_relevant_vehicles(
+            event_lat=event.latitude,
+            event_lon=event.longitude,
+            event_heading=event.heading,
+            originator_uuid=event.vehicle_uuid
+        )
+        
+        for v in relevant_vehicles:
+            alert = EmergencyAlert(
+                event_id=event_id,
+                distance_meters=v["distance_meters"]
+            )
+            alert_dict = alert.dict()
+            alert_dict["target_vehicle_uuid"] = v["vehicle_uuid"]
+            alert_id = emergency_db.create_alert(alert_dict)
+            generated_alerts.append(alert_dict)
 
-    return {
-        "event_id": event_id,
-        "notified_vehicles": len(relevant_vehicles),
-        "alerts": generated_alerts
-    }
+        return {
+            "event_id": event_id,
+            "notified_vehicles": len(relevant_vehicles),
+            "alerts": generated_alerts
+        }
+
+@router.get("/nearby/{vehicle_uuid}", response_model=List[dict])
+def get_nearby_vehicles(vehicle_uuid: str, lat: float, lon: float, radius: float = 500.0):
+    return nearby_vehicle_service.find_nearby_vehicles(lat, lon, vehicle_uuid, radius_m=radius)
 
 # Endpoint for a vehicle to poll its alerts
 @router.get("/alerts/{vehicle_uuid}", response_model=List[dict])
