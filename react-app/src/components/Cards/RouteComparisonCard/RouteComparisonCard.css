@@ -1,0 +1,139 @@
+.route-comp-card {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  transition: all 0.2s ease;
+}
+
+.route-comp-card.selected {
+  border: 2px solid #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+  padding: 19px; /* adjust for border width to prevent layout jump */
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.route-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.route-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.route-badge.recommended {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.route-badge.fastest {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.route-badge.alternative {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.route-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.detail-val {
+  font-size: 13px;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.detail-val.bold {
+  font-weight: 700;
+}
+
+.traffic-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.traffic-badge.moderate {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+.traffic-badge.heavy {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+.traffic-badge.low {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.has-delay {
+  color: #ea580c;
+  font-weight: 600;
+}
+
+.no-delay {
+  color: #059669;
+  font-weight: 600;
+}
+
+.select-route-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  color: var(--text-main);
+  transition: all 0.2s ease;
+}
+
+.select-route-btn.active {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.select-route-btn:not(.active):hover {
+  background-color: #f8fafc;
+}

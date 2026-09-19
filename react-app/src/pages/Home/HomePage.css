@@ -1,0 +1,73 @@
+.home-page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #e5e4e2; /* Map base color */
+  overflow: hidden;
+}
+
+.map-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Overlay Containers */
+.top-left-overlay {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.top-right-overlay {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 10;
+}
+
+.bottom-overlay {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 10;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+/* Map legend */
+.map-legend {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.legend-dot.smooth { background-color: #10b981; }
+.legend-dot.moderate { background-color: #f59e0b; }
+.legend-dot.heavy { background-color: #f97316; }
+.legend-dot.severe { background-color: #ef4444; }

@@ -1,0 +1,127 @@
+.search-card {
+  background-color: var(--bg-panel);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.search-inputs-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  flex: 1;
+  gap: 12px;
+}
+
+.input-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.dot.green {
+  background-color: var(--brand-green-text);
+}
+
+.input-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.input-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.input-text input {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  outline: none;
+  font-family: inherit;
+  width: 100%;
+}
+
+.input-text input::placeholder {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.swap-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.search-submit-btn {
+  background-color: var(--brand-green-dark);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-submit-btn:hover {
+  background-color: #0c2a1d;
+}
+
+.quick-filters {
+  display: flex;
+  gap: 12px;
+  padding-left: 4px;
+}
+
+.filter-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f1f5f9;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.filter-pill .star-icon {
+  color: #f59e0b;
+  fill: #f59e0b;
+}
+
+.filter-pill:hover {
+  background-color: #e2e8f0;
+}

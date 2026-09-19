@@ -1,0 +1,148 @@
+.predictions-page {
+  padding: 24px 32px;
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--bg-panel);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header */
+.pred-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.pred-title-group h1 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+}
+
+.pred-title-group p {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.pred-date {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* Info Alert */
+.pred-info-alert {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.info-icon {
+  color: #3b82f6;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-text {
+  font-size: 12px;
+  color: #1e3a8a;
+  line-height: 1.5;
+}
+
+.info-text strong {
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+/* City-Wide Section */
+.city-wide-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-header h2 {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: 0.5px;
+}
+
+.section-header h2 span {
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.forecast-stats-row {
+  display: flex;
+  gap: 16px;
+}
+
+.forecast-stat-box {
+  flex: 1;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.forecast-val {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.forecast-val.orange { color: #f59e0b; }
+.forecast-val.red { color: #d946ef; /* looks a bit orange-red or crimson */ color: #ea580c; }
+.forecast-val.green { color: #10b981; }
+
+.forecast-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* Segment Preds */
+.segment-preds-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.preds-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}

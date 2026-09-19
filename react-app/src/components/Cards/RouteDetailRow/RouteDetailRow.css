@@ -1,0 +1,142 @@
+.route-detail-row {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+}
+
+.route-detail-row.active {
+  border: 1px solid #93c5fd;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05);
+}
+
+.route-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route-icon-box.recommended {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+.route-icon-box.fastest {
+  background-color: #ecfdf5;
+  color: #10b981;
+}
+
+.route-icon-box.alternative {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.route-detail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.route-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.route-detail-metrics {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-main);
+  flex-wrap: wrap;
+}
+
+.metric-time {
+  font-weight: 700;
+}
+
+.metric-dot {
+  color: var(--text-muted);
+}
+
+.metric-traffic {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.metric-traffic.moderate {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+
+.metric-traffic.heavy {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.metric-traffic.low {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.traffic-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.metric-traffic.moderate .traffic-dot { background-color: #f59e0b; }
+.metric-traffic.heavy .traffic-dot { background-color: #ef4444; }
+.metric-traffic.low .traffic-dot { background-color: #10b981; }
+
+
+.metric-delay {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.metric-toll {
+  font-size: 12px;
+  font-weight: 700;
+  background-color: #fef3c7;
+  color: #b45309;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.route-detail-via {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.via-icon {
+  font-size: 14px;
+}
+
+.chevron-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.chevron-btn:hover {
+  color: var(--text-main);
+}

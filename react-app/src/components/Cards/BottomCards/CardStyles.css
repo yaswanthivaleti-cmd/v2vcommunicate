@@ -1,0 +1,77 @@
+.bottom-card {
+  background-color: var(--bg-panel);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0; /* prevents flex blowout */
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.card-icon {
+  stroke-width: 2.5;
+}
+
+/* Card 1 specific */
+.card-icon.blue { color: #3b82f6; }
+.status-orange { color: #f59e0b; font-size: 18px; font-weight: 800; margin: 4px 0; }
+.speed-text { font-size: 24px; font-weight: 800; color: var(--text-main); }
+.speed-label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+.trend-text { font-size: 13px; font-weight: 600; color: var(--accent-red); display: flex; align-items: center; gap: 4px; }
+.card-footer-text { font-size: 11px; color: var(--text-muted); margin-top: auto; }
+
+/* Card 2 specific */
+.card-icon.purple { color: #8b5cf6; }
+.badge-gray { background-color: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-left: auto; }
+.forecast-subtitle { font-size: 13px; font-weight: 700; color: var(--accent-red); text-align: center; }
+.forecast-sub { font-size: 11px; color: var(--text-muted); text-align: center; display: block; }
+.timeline { display: flex; justify-content: space-between; margin-top: 8px; position: relative; }
+.timeline::before { content: ''; position: absolute; top: 4px; left: 10%; right: 10%; height: 2px; background: linear-gradient(90deg, #f59e0b, #f97316, #ef4444); z-index: 0; }
+.time-point { display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 1; }
+.time-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid white; }
+.time-dot.now { background-color: #f59e0b; }
+.time-dot.m5 { background-color: #f97316; }
+.time-dot.m10 { background-color: #ea580c; }
+.time-dot.m15 { background-color: #ef4444; }
+.time-label { font-size: 10px; font-weight: 700; color: var(--text-muted); }
+.time-val { font-size: 11px; font-weight: 800; color: var(--text-main); }
+.reasons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: auto; }
+.reason-title { font-size: 11px; font-weight: 600; color: var(--text-main); grid-column: 1 / -1; }
+.reason-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text-muted); }
+
+/* Card 3 specific */
+.delay-box { border: 1px solid #fecaca; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; margin: 4px 0; }
+.delay-label { font-size: 10px; font-weight: 700; color: #dc2626; letter-spacing: 0.5px; }
+.delay-val { font-size: 24px; font-weight: 800; color: #dc2626; display: flex; align-items: center; gap: 8px; }
+.eta-row { display: flex; justify-content: space-between; }
+.eta-col { display: flex; flex-direction: column; gap: 2px; }
+.eta-label { font-size: 10px; font-weight: 700; color: var(--text-muted); }
+.eta-val { font-size: 16px; font-weight: 800; color: var(--text-main); }
+.eta-val.red { color: #dc2626; }
+
+/* Card 4 specific */
+.card-icon.green { color: #10b981; }
+.rec-badge { background-color: #ecfdf5; color: #059669; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; align-self: flex-start; }
+.rec-badge::before { content: ''; width: 6px; height: 6px; background-color: #10b981; border-radius: 50%; }
+.rec-main { font-size: 24px; font-weight: 800; color: var(--text-main); }
+.rec-sub { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-left: 4px; }
+.rec-benefit { font-size: 12px; font-weight: 600; color: #059669; display: flex; align-items: center; gap: 4px; }
+.rec-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+.rec-actions { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+.btn-dark { background-color: var(--brand-green-dark); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; }
+.btn-ghost { background: none; border: none; color: var(--text-main); font-weight: 600; font-size: 13px; cursor: pointer; padding: 8px; }

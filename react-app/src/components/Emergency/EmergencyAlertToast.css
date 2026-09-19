@@ -1,0 +1,80 @@
+.emergency-toast-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #fff;
+  border-left: 4px solid #ef4444;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  display: flex;
+  width: 340px;
+  padding: 16px;
+  gap: 16px;
+  z-index: 10000;
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.et-icon-col {
+  padding-top: 4px;
+}
+
+.et-title {
+  font-weight: 700;
+  color: #991b1b;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.et-message {
+  font-size: 14px;
+  color: #334155;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.et-distance {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.et-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.et-btn-chat {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.et-btn-chat:hover {
+  background: #dc2626;
+}
+
+.et-btn-dismiss {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.et-btn-dismiss:hover {
+  background: #e2e8f0;
+}

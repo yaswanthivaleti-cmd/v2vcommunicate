@@ -1,0 +1,148 @@
+.incident-card {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.inc-icon-box {
+  background-color: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.inc-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.inc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inc-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.inc-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inc-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.inc-badge.severity {
+  border: 1px solid transparent;
+}
+
+.inc-badge.severity.high {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+.inc-badge.severity.high .inc-dot { background-color: #dc2626; }
+
+.inc-badge.severity.med {
+  background-color: #fffbeb;
+  color: #d97706;
+  border-color: #fde68a;
+}
+.inc-badge.severity.med .inc-dot { background-color: #d97706; }
+
+.inc-badge.severity.low {
+  background-color: #fefce8;
+  color: #ca8a04;
+  border-color: #fef08a;
+}
+.inc-badge.severity.low .inc-dot { background-color: #ca8a04; }
+
+.inc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.inc-badge.status.active {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.inc-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.inc-desc {
+  font-size: 13px;
+  color: var(--text-main);
+  margin: 4px 0 8px 0;
+  line-height: 1.4;
+}
+
+.inc-metrics {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.inc-metric {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inc-metric.clear-time {
+  color: #d97706;
+  margin-left: auto;
+}
+
+.inc-impact-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #d97706;
+  border: 1px solid #fcd34d;
+  background-color: #fffbeb;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-top: 8px;
+  align-self: flex-start;
+}

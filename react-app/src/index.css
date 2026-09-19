@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'leaflet/dist/leaflet.css';
+
+:root {
+  --bg-body: #f1f5f9; /* placeholder map bg */
+  --bg-panel: #ffffff;
+  
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  
+  --brand-green-dark: #123e2b;
+  --brand-green-light: #e6f3eb;
+  --brand-green-text: #16a34a;
+  
+  --border-color: #e2e8f0;
+  
+  --accent-red: #ef4444;
+  --accent-blue: #3b82f6;
+
+  --sidebar-width: 250px;
+  --header-height: 64px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden; /* App is a full-screen dashboard */
+}
+
+/* Base App Layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.page-content {
+  flex: 1;
+  position: relative;
+  /* Placeholder for map background */
+  background-color: #e5e5e0;
+  background-image: radial-gradient(#d4d4cf 1px, transparent 1px);
+  background-size: 20px 20px;
+}
