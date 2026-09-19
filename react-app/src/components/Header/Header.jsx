@@ -1,6 +1,6 @@
 import React from 'react';
 import './Header.css';
-import { ShieldAlert, Wifi, Bell, Heart } from 'lucide-react';
+import { ShieldAlert, Wifi, Bell } from 'lucide-react';
 
 const Header = () => {
   return (
@@ -26,12 +26,9 @@ const Header = () => {
         </div>
 
         <div className="action-icons">
-          <button className="icon-btn notification-btn">
+          <button className="icon-btn notification-btn" onClick={() => window.dispatchEvent(new CustomEvent('toggleNotifications'))}>
             <Bell size={20} />
             <span className="badge">8</span>
-          </button>
-          <button className="icon-btn">
-            <Heart size={20} />
           </button>
         </div>
 

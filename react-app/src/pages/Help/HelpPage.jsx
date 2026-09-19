@@ -1,8 +1,97 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './HelpPage.css';
-import { Activity, Bell, RotateCcw, Copy, ThumbsUp, ThumbsDown, Plus, ArrowUp } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, Bell, Heart, Activity, Car, Map, ShieldAlert, Settings, BookOpen } from 'lucide-react';
+
+const faqCategories = [
+  {
+    title: 'Getting Started',
+    icon: <BookOpen size={20} />,
+    questions: [
+      {
+        q: 'What is TrafficAI?',
+        a: 'TrafficAI is an intelligent command center that uses real-time telemetry, routing algorithms, and V2V (Vehicle-to-Vehicle) communication to optimize your travel.'
+      },
+      {
+        q: 'How do I enable V2V communication?',
+        a: 'V2V communication is enabled automatically as long as you have granted location permissions. You can see nearby connected vehicles on the "Nearby" page.'
+      }
+    ]
+  },
+  {
+    title: 'Route & Navigation',
+    icon: <Map size={20} />,
+    questions: [
+      {
+        q: 'How does Route Planning work?',
+        a: 'Route Planning analyzes live traffic, historical congestion patterns (using ST-GCN models), and active incidents to provide multiple route options optimized for time or eco-friendliness.'
+      },
+      {
+        q: 'What does the Eco Score mean?',
+        a: 'The Eco Score calculates the estimated fuel efficiency and carbon footprint of a route based on elevation changes, average speeds, and expected idling time in traffic.'
+      }
+    ]
+  },
+  {
+    title: 'Incidents & Alerts',
+    icon: <ShieldAlert size={20} />,
+    questions: [
+      {
+        q: 'How do I report an incident?',
+        a: 'You can report incidents manually via the "Nearby" page by clicking "Broadcast Emergency". Alternatively, severe sudden decelerations are automatically flagged as anomalies.'
+      },
+      {
+        q: 'What is the difference between Active and Resolved incidents?',
+        a: 'Active incidents are currently impacting traffic and are verified by multiple nodes. Resolved incidents have been cleared, but remain in the log for historical analytics.'
+      }
+    ]
+  },
+  {
+    title: 'V2V Features',
+    icon: <Car size={20} />,
+    questions: [
+      {
+        q: 'Can I message other drivers?',
+        a: 'Direct messaging is restricted for privacy. However, during an active emergency event, affected vehicles are joined into an anonymous, temporary chat session to coordinate.'
+      },
+      {
+        q: 'How far does the radar reach?',
+        a: 'The Nearby page displays vehicles within a 500-meter radius of your current GPS location.'
+      }
+    ]
+  },
+  {
+    title: 'Account & Settings',
+    icon: <Settings size={20} />,
+    questions: [
+      {
+        q: 'How do I change my vehicle profile?',
+        a: 'Navigate to the Settings tab to update your vehicle type, weight class (which affects routing), and notification preferences.'
+      },
+      {
+        q: 'Is my location data secure?',
+        a: 'Yes. Location data is anonymized. Your exact coordinates are only shared temporarily with nearby nodes when you actively trigger an emergency broadcast.'
+      }
+    ]
+  }
+];
 
 const HelpPage = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleAccordion = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  const filteredCategories = faqCategories.map(cat => ({
+    ...cat,
+    questions: cat.questions.filter(
+      item => 
+        item.q.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        item.a.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  })).filter(cat => cat.questions.length > 0);
+
   return (
     <div className="help-page">
       {/* Global Header */}
@@ -13,7 +102,7 @@ const HelpPage = () => {
             <span className="inc-dot" style={{backgroundColor: '#059669', width: 6, height: 6, borderRadius: '50%', display: 'inline-block', marginRight: 4}}></span>
             All Systems Active
           </div>
-          <button className="inc-icon-btn">
+          <button className="inc-icon-btn" onClick={() => window.dispatchEvent(new CustomEvent('toggleNotifications'))}>
             <Bell size={18} />
             <span className="inc-bell-badge">8</span>
           </button>
@@ -34,93 +123,59 @@ const HelpPage = () => {
         {/* Page Header */}
         <div className="help-header">
           <div>
-            <h1>Help & Assistant</h1>
-            <p>Ask questions, troubleshoot corridors, or query operational SOPs.</p>
-          </div>
-          <button className="btn-reset">
-            <RotateCcw size={14} /> Reset
-          </button>
-        </div>
-
-        {/* Chat Area */}
-        <div className="chat-area">
-          {/* User Message */}
-          <div className="msg-row user">
-            <div className="msg-meta">You • 14:32</div>
-            <div className="msg-bubble user-bubble">
-              How does the Spatio-Temporal Graph ConvNet (ST-GCN) calculate congestion delay on NH-44 when inductive loops drop below 60% reporting?
-            </div>
-          </div>
-
-          {/* AI Message */}
-          <div className="msg-row ai">
-            <div className="ai-header">
-              <div className="ai-avatar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
-              </div>
-              <span className="ai-name">TrafficAI Copilot</span>
-              <span className="ai-dot">•</span>
-              <span className="ai-model">ST-GCN Model</span>
-            </div>
-            
-            <div className="msg-bubble ai-bubble">
-              <p>When inductive loop reporting on NH-44 drops below the 60% baseline, the system initiates a three-stage fallback matrix to maintain continuous queue monitoring without operational downtime:</p>
-              
-              <div className="ai-list">
-                <div className="ai-list-item">
-                  <strong>Adaptive Graph Imputation:</strong> Upstream and downstream node tensors infer flow speeds via adjacency weights <code>(A_ij × W)</code>.
-                </div>
-                <div className="ai-list-item">
-                  <strong>Optical Flow Fusion:</strong> Corridor CCTV cameras (Sector 14 to KM 28) run edge YOLO-v8 models to cross-validate density at 15 FPS.
-                </div>
-                <div className="ai-list-item">
-                  <strong>Confidence Calibration:</strong> Metric confidence adjusts to 88.4%, and an advisory flag is routed to the Corridor Coordinator.
-                </div>
-              </div>
-
-              <div className="ai-code-block">
-                <div className="code-header">FALLBACK RESPONSE TELEMETRY</div>
-                <div className="code-content">
-                  corridor: "NH44-SEC14-KM28"  |  loop_ratio: 0.54  |  speed: 41.8 km/h  |  confidence: 0.88
-                </div>
-              </div>
-
-              <div className="ai-actions">
-                <button className="ai-action-btn"><Copy size={14} /> Copy</button>
-                <button className="ai-action-btn"><ThumbsUp size={14} /></button>
-                <button className="ai-action-btn"><ThumbsDown size={14} /></button>
-              </div>
-            </div>
+            <h1>Help Center</h1>
+            <p>Find answers to common questions and learn how to use TrafficAI.</p>
           </div>
         </div>
 
-        {/* Input Area Fixed at Bottom */}
-        <div className="chat-input-area">
-          <div className="suggestions-row">
-            <span className="suggestions-label">SUGGESTIONS:</span>
-            <button className="suggestion-pill">Congestion algorithms</button>
-            <button className="suggestion-pill">Sensor calibration</button>
-            <button className="suggestion-pill">Escalation protocol</button>
-            <button className="suggestion-pill">Police CAD webhooks</button>
-          </div>
-
-          <div className="input-box-wrapper">
-            <button className="input-plus-btn">
-              <Plus size={20} />
-            </button>
+        {/* Search Bar */}
+        <div className="help-search-container">
+          <div className="help-search-box">
+            <Search size={20} className="help-search-icon" />
             <input 
               type="text" 
-              className="chat-input" 
-              placeholder="Ask TrafficAI anything about traffic models, protocols, or sensors..." 
+              placeholder="Search for answers..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="input-send-btn">
-              <ArrowUp size={18} />
-            </button>
           </div>
+        </div>
 
-          <div className="input-footer">
-            TrafficAI Assistant references live telemetry, ST-GCN nodes, and standard operating protocols.
-          </div>
+        {/* FAQ Area */}
+        <div className="faq-area">
+          {filteredCategories.length === 0 ? (
+            <div className="no-results">No results found for "{searchQuery}"</div>
+          ) : (
+            filteredCategories.map((category, catIdx) => (
+              <div key={catIdx} className="faq-category">
+                <div className="faq-category-header">
+                  <div className="faq-category-icon">{category.icon}</div>
+                  <h2>{category.title}</h2>
+                </div>
+                
+                <div className="faq-list">
+                  {category.questions.map((item, qIdx) => {
+                    const uniqueIndex = `${catIdx}-${qIdx}`;
+                    const isOpen = openIndex === uniqueIndex;
+                    
+                    return (
+                      <div key={qIdx} className={`faq-item ${isOpen ? 'open' : ''}`}>
+                        <button className="faq-question" onClick={() => toggleAccordion(uniqueIndex)}>
+                          <span>{item.q}</span>
+                          {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                        </button>
+                        {isOpen && (
+                          <div className="faq-answer">
+                            <p>{item.a}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

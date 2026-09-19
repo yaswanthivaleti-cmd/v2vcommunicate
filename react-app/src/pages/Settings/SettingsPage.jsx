@@ -19,7 +19,7 @@ const SettingsPage = () => {
             <span className="inc-dot" style={{backgroundColor: '#059669', width: 6, height: 6, borderRadius: '50%', display: 'inline-block', marginRight: 4}}></span>
             All Systems Active
           </div>
-          <button className="inc-icon-btn">
+          <button className="inc-icon-btn" onClick={() => window.dispatchEvent(new CustomEvent('toggleNotifications'))}>
             <Bell size={18} />
             <span className="inc-bell-badge">8</span>
           </button>

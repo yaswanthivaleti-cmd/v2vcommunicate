@@ -10,19 +10,35 @@ const PredictionsPage = () => {
   const [error, setError] = useState(null);
 
   // Predefined segments to monitor
-  const segments = [
+  const defaultSegments = [
     { name: 'Connaught Place', lat: 28.6330, lng: 77.2194 },
     { name: 'Sector 62, Noida', lat: 28.6200, lng: 77.3600 },
     { name: 'Badarpur Flyover', lat: 28.5024, lng: 77.3039 },
     { name: 'Ring Road ITO', lat: 28.6288, lng: 77.2435 }
   ];
 
-  const fetchPredictions = async () => {
+  const fetchRoadName = async (lat, lng, fallbackName) => {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1`, {
+        headers: { 'Accept-Language': 'en-US,en;q=0.9' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const road = data.address?.amenity || data.address?.road || data.address?.suburb || data.address?.neighbourhood || data.address?.city || data.address?.village || data.display_name?.split(',')[0];
+        return road || fallbackName;
+      }
+    } catch (err) {
+      console.warn("Reverse geocoding failed", err);
+    }
+    return fallbackName;
+  };
+
+  const fetchPredictions = async (segmentsToFetch) => {
     setLoading(true);
     setError(null);
     try {
       const results = await Promise.all(
-        segments.map(async (seg) => {
+        segmentsToFetch.map(async (seg) => {
           try {
             const data = await journeyApi.getPrediction(seg.lat, seg.lng);
             return {
@@ -49,7 +65,35 @@ const PredictionsPage = () => {
   };
 
   useEffect(() => {
-    fetchPredictions();
+    if (navigator.geolocation) {
+      setLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const dynamicPoints = [
+            { name: "Your Location", lat: lat, lng: lon },
+            { name: "North Route", lat: lat + 0.015, lng: lon + 0.002 },
+            { name: "East Route", lat: lat - 0.002, lng: lon + 0.015 },
+            { name: "South Route", lat: lat - 0.015, lng: lon - 0.005 }
+          ];
+
+          const pointsWithNames = await Promise.all(dynamicPoints.map(async (p) => {
+             const roadName = await fetchRoadName(p.lat, p.lng, p.name);
+             return { ...p, name: roadName };
+          }));
+
+          fetchPredictions(pointsWithNames);
+        },
+        (err) => {
+          console.warn("Location not provided. Using default.", err);
+          fetchPredictions(defaultSegments);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    } else {
+      fetchPredictions(defaultSegments);
+    }
   }, []);
 
   const getSeverity = (speed, freeFlow) => {

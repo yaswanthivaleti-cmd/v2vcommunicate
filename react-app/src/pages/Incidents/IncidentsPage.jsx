@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './IncidentsPage.css';
 import IncidentCard from '../../components/Cards/IncidentCard/IncidentCard';
 import { Search, RefreshCw, Bell, Heart, Activity } from 'lucide-react';
 
 const IncidentsPage = () => {
-  const incidentsData = [
+  const [incidents, setIncidents] = useState([]);
+  const [resolvedIncidents, setResolvedIncidents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('ACTIVE');
+
+  const defaultIncidentsData = [
     {
       title: "Ring Road (ITO)",
       severity: "HIGH SEVERITY",
@@ -62,6 +67,102 @@ const IncidentsPage = () => {
     }
   ];
 
+  const defaultResolvedData = [
+    {
+      title: "Phagwara Highway",
+      severity: "RESOLVED",
+      status: "RESOLVED",
+      location: "Near JCT Mills",
+      description: "Cleared: Broken down truck towed successfully.",
+      detected: "12H AGO",
+      confirming: "0",
+      clearTime: "CLEARED",
+      delayImpact: "NO DELAY"
+    },
+    {
+      title: "Model Town",
+      severity: "RESOLVED",
+      status: "RESOLVED",
+      location: "Main Market",
+      description: "Cleared: Waterlogging subsided.",
+      detected: "1D AGO",
+      confirming: "0",
+      clearTime: "CLEARED",
+      delayImpact: "NO DELAY"
+    }
+  ];
+
+  const fetchRoadName = async (lat, lng, fallbackName) => {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1`, {
+        headers: { 'Accept-Language': 'en-US,en;q=0.9' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const road = data.address?.amenity || data.address?.road || data.address?.suburb || data.address?.neighbourhood || data.address?.city || data.display_name?.split(',')[0];
+        return road || fallbackName;
+      }
+    } catch (err) {
+      console.warn("Reverse geocoding failed", err);
+    }
+    return fallbackName;
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      setLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          
+          const dynamicPoints = [
+            { lat: lat + 0.01, lng: lon + 0.01 },
+            { lat: lat - 0.015, lng: lon - 0.005 },
+            { lat: lat + 0.02, lng: lon - 0.02 },
+            { lat: lat - 0.01, lng: lon + 0.02 },
+            { lat: lat, lng: lon - 0.03 }
+          ];
+
+          const names = await Promise.all(dynamicPoints.map((p, i) => fetchRoadName(p.lat, p.lng, defaultIncidentsData[i].title)));
+          
+          const newIncidents = defaultIncidentsData.map((inc, i) => ({
+            ...inc,
+            title: names[i],
+            location: `Near ${names[i]}`
+          }));
+          
+          const resolvedPoints = [
+            { lat: lat + 0.03, lng: lon - 0.01 },
+            { lat: lat - 0.02, lng: lon + 0.03 }
+          ];
+          const resolvedNames = await Promise.all(resolvedPoints.map((p, i) => fetchRoadName(p.lat, p.lng, defaultResolvedData[i].title)));
+          
+          const newResolved = defaultResolvedData.map((inc, i) => ({
+            ...inc,
+            title: resolvedNames[i],
+            location: `Near ${resolvedNames[i]}`
+          }));
+          
+          setIncidents(newIncidents);
+          setResolvedIncidents(newResolved);
+          setLoading(false);
+        },
+        (err) => {
+          console.warn("Location not provided. Using default.", err);
+          setIncidents(defaultIncidentsData);
+          setResolvedIncidents(defaultResolvedData);
+          setLoading(false);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    } else {
+      setIncidents(defaultIncidentsData);
+      setResolvedIncidents(defaultResolvedData);
+      setLoading(false);
+    }
+  }, []);
+
   return (
     <div className="incidents-page">
       {/* Global-style Header for this page */}
@@ -72,7 +173,7 @@ const IncidentsPage = () => {
             <Activity size={14} className="sys-icon" />
             All Systems Active
           </div>
-          <button className="inc-icon-btn">
+          <button className="inc-icon-btn" onClick={() => window.dispatchEvent(new CustomEvent('toggleNotifications'))}>
             <Bell size={18} />
             <span className="inc-bell-badge">8</span>
           </button>
@@ -111,19 +212,29 @@ const IncidentsPage = () => {
 
         {/* Tabs */}
         <div className="inc-tabs-row">
-          <button className="inc-tab active">
-            <span className="tab-icon">⚠</span> ACTIVE <span className="tab-count">5</span>
+          <button 
+            className={`inc-tab ${activeTab === 'ACTIVE' ? 'active' : ''}`}
+            onClick={() => setActiveTab('ACTIVE')}
+          >
+            <span className="tab-icon">⚠</span> ACTIVE <span className="tab-count">{loading ? '-' : incidents.length}</span>
           </button>
-          <button className="inc-tab">
-            <span className="tab-icon">✔</span> RESOLVED <span className="tab-count">2</span>
+          <button 
+            className={`inc-tab ${activeTab === 'RESOLVED' ? 'active' : ''}`}
+            onClick={() => setActiveTab('RESOLVED')}
+          >
+            <span className="tab-icon">✔</span> RESOLVED <span className="tab-count">{loading ? '-' : resolvedIncidents.length}</span>
           </button>
         </div>
 
         {/* Grid */}
         <div className="inc-grid">
-          {incidentsData.map((inc, idx) => (
-            <IncidentCard key={idx} {...inc} />
-          ))}
+          {loading ? (
+            <div style={{ padding: '20px', color: '#64748b' }}>Locating nearby incidents...</div>
+          ) : (
+            (activeTab === 'ACTIVE' ? incidents : resolvedIncidents).map((inc, idx) => (
+              <IncidentCard key={idx} {...inc} />
+            ))
+          )}
         </div>
       </div>
     </div>

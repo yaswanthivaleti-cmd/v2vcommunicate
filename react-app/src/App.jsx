@@ -11,8 +11,10 @@ import AnalyticsPage from './pages/Analytics/AnalyticsPage';
 import SettingsPage from './pages/Settings/SettingsPage';
 import HelpPage from './pages/Help/HelpPage';
 import EmergencyAlertToast from './components/Emergency/EmergencyAlertToast';
-import EmergencyChatModal from './components/Emergency/EmergencyChatModal';
 import AuthPage from './components/Auth/AuthPage';
+import GlobalLoader from './components/GlobalLoader/GlobalLoader';
+import FloatingAssistant from './components/FloatingAssistant/FloatingAssistant';
+import NotificationsModal from './components/Notifications/NotificationsModal';
 import { getMe } from './api/authApi';
 import './App.css';
 
@@ -26,7 +28,19 @@ const generateUUID = () => {
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [activePage, setActivePage] = useState('Home');
+  const [activePage, setRawActivePage] = useState('Home');
+  const [isPageLoading, setIsPageLoading] = useState(false);
+
+  // Intercept page changes to show the loader
+  const setActivePage = (page) => {
+    if (page !== activePage) {
+      setIsPageLoading(true);
+      setRawActivePage(page);
+      setTimeout(() => {
+        setIsPageLoading(false);
+      }, 800);
+    }
+  };
   
   // Emergency Chat State
   const [vehicleUuid, setVehicleUuid] = useState(null);
@@ -118,7 +132,9 @@ function App() {
       {activePage === 'Home' && <Header />}
       <div className="main-content">
         <Sidebar activePage={activePage} setActivePage={setActivePage} setIsAuthenticated={setIsAuthenticated} />
-        <main className="page-content">
+        <main className="page-content" style={{ position: 'relative' }}>
+          {isPageLoading && <GlobalLoader message={`Loading ${activePage}...`} />}
+          
           {activePage === 'Home' && <HomePage setActivePage={setActivePage} />}
           {activePage === 'Live Traffic' && <LiveTrafficPage setActivePage={setActivePage} />}
           {activePage === 'Route Planning' && <RoutePlanningPage setActivePage={setActivePage} />}
@@ -148,6 +164,9 @@ function App() {
           onClose={() => setShowChatModal(false)}
         />
       )}
+      
+      <FloatingAssistant />
+      <NotificationsModal />
     </div>
   );
 }

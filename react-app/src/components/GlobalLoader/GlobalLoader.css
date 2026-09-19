@@ -1,0 +1,48 @@
+.global-loader-container {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 9999px;
+  padding: 8px 16px;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  animation: slide-down 0.3s ease-out;
+}
+
+.loader-radar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  border-top-color: #3b82f6;
+  animation: spin 1s infinite linear;
+}
+
+.radar-sweep, .radar-dot, .radar-center-icon {
+  display: none;
+}
+
+.loader-text {
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes slide-down {
+  0% { transform: translate(-50%, -20px); opacity: 0; }
+  100% { transform: translate(-50%, 0); opacity: 1; }
+}
+
+

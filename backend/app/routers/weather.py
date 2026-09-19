@@ -28,8 +28,8 @@ async def get_current_weather(
     observation = WeatherObservation(
         latitude=latitude,
         longitude=longitude,
-        temperature=weather["temperature_c"],
-        condition=weather["condition"],
+        temperature=weather.get("temperature", 0.0),
+        condition=weather.get("condition", "clear"),
         provider=provider.name
     )
     db.add(observation)

@@ -90,7 +90,33 @@ const NearbyPage = ({ vehicleUuid }) => {
       const response = await fetch(`/api/v1/emergency/nearby/${vehicleUuid}?lat=${lat}&lon=${lon}&radius=500`);
       if (response.ok) {
         const data = await response.json();
-        setNearbyVehicles(data);
+        
+        // --- HACKATHON DEMO: Simulate vehicles if none exist ---
+        if (data.length === 0) {
+          const simulated = [
+            {
+              vehicle_uuid: 'sim-truck-992',
+              latitude: lat + 0.002,
+              longitude: lon + 0.001,
+              distance_meters: 240
+            },
+            {
+              vehicle_uuid: 'sim-sedan-104',
+              latitude: lat - 0.0015,
+              longitude: lon - 0.002,
+              distance_meters: 310
+            },
+            {
+              vehicle_uuid: 'sim-amb-001',
+              latitude: lat + 0.001,
+              longitude: lon - 0.003,
+              distance_meters: 450
+            }
+          ];
+          setNearbyVehicles(simulated);
+        } else {
+          setNearbyVehicles(data);
+        }
       }
     } catch (err) {
       console.error("Failed to fetch nearby vehicles", err);
