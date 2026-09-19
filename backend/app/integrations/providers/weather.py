@@ -8,7 +8,10 @@ class ExternalWeatherProvider(BaseProvider):
         self.api_key = api_key
 
     async def get_current_weather(self, latitude: float, longitude: float) -> Optional[Dict[str, Any]]:
-        # GET https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
-        url = f"{self.base_url}/weather"
-        params = {"lat": latitude, "lon": longitude, "appid": self.api_key, "units": "metric"}
+        url = f"{self.base_url}/forecast"
+        params = {
+            "latitude": latitude, 
+            "longitude": longitude, 
+            "current": "temperature_2m,wind_speed_10m,precipitation,weather_code"
+        }
         return await self.fetch_async(url, params=params)

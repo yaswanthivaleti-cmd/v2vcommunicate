@@ -1,9 +1,9 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from app.config import settings
 
-# The Neon PostgreSQL connection string must be provided
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = settings.SQLALCHEMY_DATABASE_URI
 
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL environment variable is not set. A Neon PostgreSQL connection string is required.")

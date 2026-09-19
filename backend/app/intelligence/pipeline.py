@@ -30,7 +30,13 @@ class TrafficAIPipeline:
         # 2. Fetch Data (Concurrent for performance)
         # Note: In reality, we need routes first to know which segments to query for traffic.
         # For this prototype structure, we'll fetch routes first.
-        raw_routes = await routing_provider.get_routes(origin, destination)
+        # Extract coordinates
+        origin_lat = getattr(origin, 'latitude', origin.get('latitude') if isinstance(origin, dict) else 28.6139)
+        origin_lng = getattr(origin, 'longitude', origin.get('longitude') if isinstance(origin, dict) else 77.2090)
+        dest_lat = getattr(destination, 'latitude', destination.get('latitude') if isinstance(destination, dict) else 28.6200)
+        dest_lng = getattr(destination, 'longitude', destination.get('longitude') if isinstance(destination, dict) else 77.2300)
+
+        raw_routes = await routing_provider.get_routes(origin_lat, origin_lng, dest_lat, dest_lng)
         routes = RoutingNormalizer.normalize(raw_routes, routing_provider.name, is_live=True)
         
         if not routes:
@@ -40,19 +46,12 @@ class TrafficAIPipeline:
         segments = primary_route.get("segments", [])
         
         # Fetch remaining context concurrently
-        # Extract lat/lon directly from the structured origin object
-        try:
-            if hasattr(origin, 'latitude'):
-                lat, lon = origin.latitude, origin.longitude
-            else:
-                # Fallback if it's passed as a dict
-                lat, lon = origin.get('latitude'), origin.get('longitude')
-        except Exception:
-            lat, lon = 28.6139, 77.2090
+        # Use the extracted origin coordinates for contextual data fetching
+        lat, lon = origin_lat, origin_lng
             
         raw_traffic_task = traffic_provider.get_current_traffic(lat, lon)
-        raw_weather_task = weather_provider.get_weather(lat, lon)
-        raw_incidents_task = incident_provider.get_incidents(lat-0.1, lon-0.1, lat+0.1, lon+0.1)
+        raw_weather_task = weather_provider.get_current_weather(lat, lon)
+        raw_incidents_task = incident_provider.get_incidents_in_bbox(lat-0.1, lon-0.1, lat+0.1, lon+0.1)
         
         raw_traffic, raw_weather, raw_incidents = await asyncio.gather(
             raw_traffic_task, raw_weather_task, raw_incidents_task

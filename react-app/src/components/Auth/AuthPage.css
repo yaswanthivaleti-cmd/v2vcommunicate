@@ -3,12 +3,12 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: var(--background);
-  color: var(--text-primary);
+  background-color: var(--bg-body);
+  color: var(--text-main);
 }
 
 .auth-card {
-  background: var(--surface);
+  background: var(--bg-panel);
   padding: 2rem;
   border-radius: 12px;
   width: 100%;
@@ -20,7 +20,7 @@
 .auth-card h2 {
   margin-top: 0;
   margin-bottom: 1.5rem;
-  color: var(--accent-primary);
+  color: var(--text-main);
   text-align: center;
 }
 
@@ -32,27 +32,27 @@
   display: block;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
 .form-group input {
   width: 100%;
   padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  color: var(--text-primary);
+  color: var(--text-main);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--accent-primary);
+  border-color: var(--brand-green-text);
 }
 
 .auth-button {
   width: 100%;
   padding: 0.75rem;
-  background: var(--accent-primary);
+  background: var(--brand-green-dark);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -80,13 +80,13 @@
   text-align: center;
   margin-top: 1.5rem;
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
 .link-button {
   background: none;
   border: none;
-  color: var(--accent-primary);
+  color: var(--brand-green-text);
   cursor: pointer;
   padding: 0;
   font-weight: 600;
