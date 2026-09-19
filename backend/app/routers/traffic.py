@@ -6,6 +6,9 @@ from app.models.user import User
 from app.models.observation import TrafficObservation
 from app.integrations.factory import ProviderFactory
 from app.integrations.normalization.traffic_normalizer import TrafficNormalizer
+from app.intelligence.congestion import CongestionEngine
+from app.intelligence.trend import TrendEngine
+from app.intelligence.prediction import RuleBasedPredictionEngine
 
 router = APIRouter()
 
@@ -37,3 +40,33 @@ async def get_current_traffic(
     db.commit()
     
     return traffic
+
+@router.get("/prediction")
+async def get_traffic_prediction(
+    latitude: float = Query(..., description="Latitude"),
+    longitude: float = Query(..., description="Longitude"),
+    current_user: User = Depends(get_current_user)
+):
+    provider = ProviderFactory.get_traffic_provider()
+    raw_traffic = await provider.get_current_traffic(latitude, longitude)
+    if not raw_traffic:
+        raise HTTPException(status_code=404, detail="Traffic data unavailable for prediction.")
+    
+    traffic = TrafficNormalizer.normalize(raw_traffic, provider.name, is_live=True)
+    
+    congestion = CongestionEngine.calculate(traffic["current_speed"], traffic["free_flow_speed"])
+    trend = TrendEngine.calculate([traffic["current_speed"]]) 
+    
+    prediction = RuleBasedPredictionEngine.predict(
+        current_speed=traffic["current_speed"],
+        trend=trend,
+        congestion_score=congestion["score"],
+        weather_impact=0.0,
+        incident_impact=0.0
+    )
+    
+    return {
+        "current": traffic,
+        "prediction": prediction,
+        "congestion": congestion
+    }

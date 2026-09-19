@@ -11,6 +11,8 @@ import SettingsPage from './pages/Settings/SettingsPage';
 import HelpPage from './pages/Help/HelpPage';
 import EmergencyAlertToast from './components/Emergency/EmergencyAlertToast';
 import EmergencyChatModal from './components/Emergency/EmergencyChatModal';
+import AuthPage from './components/Auth/AuthPage';
+import { getMe } from './api/authApi';
 import './App.css';
 
 // Simple UUID generator for the hackathon
@@ -22,7 +24,8 @@ const generateUUID = () => {
 };
 
 function App() {
-  const [activePage, setActivePage] = useState('Help');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activePage, setActivePage] = useState('Home');
   
   // Emergency Chat State
   const [vehicleUuid, setVehicleUuid] = useState(null);
@@ -30,7 +33,7 @@ function App() {
   const [activeSessionId, setActiveSessionId] = useState(null);
   const [showChatModal, setShowChatModal] = useState(false);
 
-  // Initialize UUID
+  // Initialize UUID and Auth State
   useEffect(() => {
     let storedUuid = localStorage.getItem('trafficai_vehicle_uuid');
     if (!storedUuid) {
@@ -38,6 +41,14 @@ function App() {
       localStorage.setItem('trafficai_vehicle_uuid', storedUuid);
     }
     setVehicleUuid(storedUuid);
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      getMe().then(() => setIsAuthenticated(true)).catch(() => {
+        localStorage.removeItem('token');
+        setIsAuthenticated(false);
+      });
+    }
   }, []);
 
   // Poll for Emergency Alerts (Hackathon approach)
@@ -91,11 +102,15 @@ function App() {
     }
   };
 
+  if (!isAuthenticated) {
+    return <AuthPage onAuthSuccess={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <div className="app-container">
       {activePage === 'Home' && <Header />}
       <div className="main-content">
-        <Sidebar activePage={activePage} setActivePage={setActivePage} />
+        <Sidebar activePage={activePage} setActivePage={setActivePage} setIsAuthenticated={setIsAuthenticated} />
         <main className="page-content">
           {activePage === 'Home' && <HomePage setActivePage={setActivePage} />}
           {activePage === 'Live Traffic' && <LiveTrafficPage setActivePage={setActivePage} />}

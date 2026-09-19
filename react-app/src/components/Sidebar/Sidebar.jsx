@@ -12,8 +12,9 @@ import {
   LogOut,
   ShieldAlert
 } from 'lucide-react';
+import { logoutUser } from '../../api/authApi';
 
-const Sidebar = ({ activePage, setActivePage }) => {
+const Sidebar = ({ activePage, setActivePage, setIsAuthenticated }) => {
   const navItems = [
     { name: 'Home', icon: Home, dot: true },
     { name: 'Live Traffic', icon: Map, dot: true },
@@ -79,7 +80,7 @@ const Sidebar = ({ activePage, setActivePage }) => {
             <option>Admin</option>
           </select>
         </div>
-        <button className="btn-sign-out">
+        <button className="btn-sign-out" onClick={() => { logoutUser(); setIsAuthenticated(false); }}>
           <LogOut size={14} /> Sign Out
         </button>
         <div className="system-live-status">
