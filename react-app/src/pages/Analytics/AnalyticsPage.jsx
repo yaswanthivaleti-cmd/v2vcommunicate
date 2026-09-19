@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AnalyticsPage.css';
-import { Activity, Bell, Heart, Zap, BarChart2, AlertTriangle, TrendingUp } from 'lucide-react';
+import { Activity, Bell, Zap, BarChart2, AlertTriangle, TrendingUp } from 'lucide-react';
 import { journeyApi } from '../../api/journeyApi';
 
 const AnalyticsPage = () => {
@@ -95,9 +95,6 @@ const AnalyticsPage = () => {
           <button className="inc-icon-btn" onClick={() => window.dispatchEvent(new CustomEvent('toggleNotifications'))}>
             <Bell size={18} />
             <span className="inc-bell-badge">8</span>
-          </button>
-          <button className="inc-icon-btn">
-            <Heart size={18} />
           </button>
           <div className="inc-user-profile">
             <div className="inc-user-text">

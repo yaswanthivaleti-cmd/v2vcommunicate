@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './IncidentsPage.css';
 import IncidentCard from '../../components/Cards/IncidentCard/IncidentCard';
-import { Search, RefreshCw, Bell, Heart, Activity } from 'lucide-react';
+import { Search, RefreshCw, Bell, Activity } from 'lucide-react';
 
 const IncidentsPage = () => {
   const [incidents, setIncidents] = useState([]);
@@ -176,9 +176,6 @@ const IncidentsPage = () => {
           <button className="inc-icon-btn" onClick={() => window.dispatchEvent(new CustomEvent('toggleNotifications'))}>
             <Bell size={18} />
             <span className="inc-bell-badge">8</span>
-          </button>
-          <button className="inc-icon-btn">
-            <Heart size={18} />
           </button>
           <div className="inc-user-profile">
             <div className="inc-user-text">
